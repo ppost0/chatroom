@@ -6,23 +6,25 @@ const io = require('socket.io')(3002, {
 });
 
 io.on('connection', (socket) => {
-  console.log('A user connected.');
+  console.log('A user connected.', socket.id);
+
   socket.on('message', (message, roomName) => {
+    console.log('Sending message:', message, '| Room:',roomName)
+    console.log(roomName);
     if (roomName.length){
       io.to(roomName).emit('message', message);
-    }
-    else {
+    } else {
       io.emit('message', message);
     }
+
   })
+
   socket.on('joinRoom', (roomName) => {
     console.log('Joining room: ' + roomName)
     socket.join(roomName);
   })
+
   socket.on('disconnect', () => {
     console.log('User disconnected.');
   })
 })
-
-
-console.log('hello');
